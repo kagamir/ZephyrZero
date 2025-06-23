@@ -1,0 +1,228 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Development Workflow Guidelines
+
+## Code Standards
+
+### Language Requirements
+- **Primary Language**: English for all code, comments, and documentation
+- **Go Version**: 1.21+ as specified in [api/go.mod](mdc:api/go.mod)
+- **Code Style**: Follow Go community standards (gofmt, golint, govet)
+
+### File Organization
+- Group related functionality in appropriate packages
+- Keep file sizes reasonable (< 500 lines)
+- Use meaningful file and directory names
+- Follow the established project structure in [api/](mdc:api/)
+
+### Documentation
+- Document all exported functions and types
+- Use clear, descriptive function and variable names
+- Include usage examples for complex functionality
+- Maintain up-to-date README files
+
+## Development Environment
+
+### Local Setup
+1. **Prerequisites**:
+   - Go 1.21+
+   - SQLite3 (for development)
+   - Git
+   
+2. **Installation**:
+   ```bash
+   cd api/
+   go mod tidy
+   cp .env.example .env
+   go run main.go
+   ```
+
+### IDE Configuration
+- Use Go language server (gopls)
+- Enable automatic formatting on save (gofmt)
+- Configure linting tools (golangci-lint)
+- Set up debugging capabilities
+
+## Version Control
+
+### Git Workflow
+- Use feature branches for all development
+- Write clear, descriptive commit messages
+- Keep commits focused and atomic
+- Squash related commits before merging
+
+### Commit Message Format
+```
+<type>(<scope>): <description>
+
+<body>
+
+<footer>
+```
+
+Types: feat, fix, docs, style, refactor, test, chore
+
+### Branch Naming
+- `feature/feature-name` - New features
+- `fix/bug-description` - Bug fixes
+- `refactor/component-name` - Code refactoring
+- `docs/update-description` - Documentation updates
+
+## Testing Strategy
+
+### Unit Testing
+- Write tests for all business logic
+- Use table-driven tests for multiple scenarios
+- Mock external dependencies
+- Aim for >80% test coverage
+
+### Integration Testing
+- Test API endpoints end-to-end
+- Test database operations
+- Test file upload/download functionality
+- Test authentication and authorization flows
+
+### Test Structure
+```
+api/
+├── controllers/
+│   ├── auth_controller.go
+│   └── auth_controller_test.go
+├── services/
+│   ├── auth_service.go
+│   └── auth_service_test.go
+└── utils/
+    ├── crypto.go
+    └── crypto_test.go
+```
+
+### Running Tests
+```bash
+# Run all tests
+go test ./...
+
+# Run tests with coverage
+go test -cover ./...
+
+# Run specific package tests
+go test ./controllers/
+```
+
+## Code Quality
+
+### Static Analysis
+Use these tools regularly:
+- `go fmt` - Code formatting
+- `go vet` - Static analysis
+- `golangci-lint` - Comprehensive linting
+- `gosec` - Security analysis
+
+### Code Review Checklist
+- [ ] Code follows Go conventions
+- [ ] All functions are properly documented
+- [ ] Error handling is comprehensive
+- [ ] Security considerations are addressed
+- [ ] Tests are included and passing
+- [ ] No sensitive information in code
+- [ ] Performance implications considered
+
+## API Development
+
+### Adding New Endpoints
+1. **Define the model** in [api/models/](mdc:api/models/)
+2. **Create the service** in [api/services/](mdc:api/services/)
+3. **Implement the controller** in [api/controllers/](mdc:api/controllers/)
+4. **Add routes** in [api/routes/routes.go](mdc:api/routes/routes.go)
+5. **Write tests** for all components
+6. **Update documentation**
+
+### Database Changes
+1. **Update models** in [api/models/](mdc:api/models/)
+2. **Create migration** if needed
+3. **Test migration** in development
+4. **Update related services** and controllers
+5. **Update database documentation**
+
+## Security Development
+
+### Security Review Process
+- Review all authentication and authorization logic
+- Validate input sanitization and validation
+- Check for potential injection vulnerabilities
+- Verify encryption implementations
+- Audit logging functionality
+
+### Security Testing
+- Test authentication bypass attempts
+- Validate authorization controls
+- Test input validation edge cases
+- Verify file upload security
+- Check for information disclosure
+
+## Deployment
+
+### Environment Configuration
+- **Development**: Local development with SQLite
+- **Staging**: Production-like environment for testing
+- **Production**: Secure production deployment
+
+### Pre-deployment Checklist
+- [ ] All tests passing
+- [ ] Security review completed
+- [ ] Performance testing done
+- [ ] Database migrations tested
+- [ ] Configuration validated
+- [ ] Monitoring configured
+
+### Deployment Process
+1. **Code Review**: Peer review of all changes
+2. **Testing**: Comprehensive test suite execution
+3. **Security Scan**: Automated security analysis
+4. **Staging Deploy**: Deploy to staging environment
+5. **Validation**: End-to-end testing in staging
+6. **Production Deploy**: Deploy to production
+7. **Monitoring**: Monitor deployment and system health
+
+## Monitoring & Maintenance
+
+### Logging
+- Use structured logging throughout the application
+- Log at appropriate levels (DEBUG, INFO, WARN, ERROR)
+- Include correlation IDs for request tracking
+- Avoid logging sensitive information
+
+### Metrics
+- API response times and error rates
+- Database query performance
+- File upload/download metrics
+- Authentication success/failure rates
+- System resource utilization
+
+### Health Checks
+- Implement health check endpoints
+- Monitor database connectivity
+- Check file system availability
+- Validate external service dependencies
+
+## Troubleshooting
+
+### Common Issues
+- **Database Connection**: Check connection string and database availability
+- **File Permissions**: Verify storage directory permissions
+- **JWT Tokens**: Validate token signing and expiration
+- **File Encryption**: Check encryption key availability
+
+### Debugging Tools
+- Use Go debugger (delve) for complex issues
+- Enable debug logging in development
+- Use profiling tools for performance issues
+- Monitor system logs for errors
+
+### Performance Optimization
+- Profile critical code paths
+- Optimize database queries
+- Implement caching where appropriate
+- Monitor and optimize file I/O operations

@@ -1,0 +1,130 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# API Development Guidelines
+
+## RESTful API Design
+
+Follow REST principles for all API endpoints:
+
+### Base URL
+All API endpoints are prefixed with `/api/v1/`
+
+### HTTP Methods
+- **GET**: Retrieve resources
+- **POST**: Create new resources
+- **PUT**: Update entire resources
+- **PATCH**: Partial resource updates
+- **DELETE**: Remove resources
+
+### Response Format
+All responses follow a consistent JSON structure:
+
+```json
+{
+  "success": true,
+  "message": "Operation successful",
+  "data": {...},
+  "error": null,
+  "timestamp": "2024-01-01T00:00:00Z"
+}
+```
+
+## Authentication & Authorization
+
+### JWT Implementation
+- Located in [api/utils/jwt.go](mdc:api/utils/jwt.go)
+- Token-based authentication for all protected endpoints
+- Tokens include user ID, role, and expiration
+- Refresh token mechanism for extended sessions
+
+### Middleware
+- Authentication middleware in [api/middleware/auth.go](mdc:api/middleware/auth.go)
+- Apply to all protected routes
+- Validates JWT tokens and extracts user context
+
+### Route Protection
+Protected routes require:
+```go
+protected := router.Group("/api/v1")
+protected.Use(middleware.AuthRequired())
+```
+
+## API Endpoints Structure
+
+### Authentication Routes
+Located in [api/controllers/auth_controller.go](mdc:api/controllers/auth_controller.go):
+- `POST /api/v1/auth/register` - User registration
+- `POST /api/v1/auth/login` - User login
+- `GET /api/v1/auth/profile` - Get user profile
+- `POST /api/v1/auth/refresh` - Refresh JWT token
+- `POST /api/v1/auth/logout` - User logout
+
+### File Management Routes
+Located in [api/controllers/file_controller.go](mdc:api/controllers/file_controller.go):
+- `POST /api/v1/files/upload` - Upload file
+- `GET /api/v1/files` - List user files
+- `GET /api/v1/files/{id}` - Get file metadata
+- `GET /api/v1/files/{id}/download` - Download file
+- `DELETE /api/v1/files/{id}` - Delete file
+
+### Admin Routes
+Located in [api/controllers/audit_controller.go](mdc:api/controllers/audit_controller.go):
+- `GET /api/v1/admin/audit-logs` - Retrieve audit logs
+- `GET /api/v1/admin/users` - List all users
+- `GET /api/v1/admin/stats` - System statistics
+
+## Request Validation
+
+### Input Validation
+- Use [api/utils/validator.go](mdc:api/utils/validator.go) for all input validation
+- Validate all request parameters and body content
+- Return clear error messages for validation failures
+
+### File Upload Validation
+- Check file size limits
+- Validate file types and extensions
+- Scan for malicious content
+- Generate unique file identifiers
+
+## Error Handling
+
+### HTTP Status Codes
+- `200 OK` - Successful GET, PUT, PATCH
+- `201 Created` - Successful POST
+- `204 No Content` - Successful DELETE
+- `400 Bad Request` - Invalid request data
+- `401 Unauthorized` - Missing or invalid authentication
+- `403 Forbidden` - Insufficient permissions
+- `404 Not Found` - Resource not found
+- `409 Conflict` - Resource conflict
+- `500 Internal Server Error` - Server error
+
+### Error Response Format
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "error": {
+    "code": "ERROR_CODE",
+    "details": "Detailed error information"
+  },
+  "timestamp": "2024-01-01T00:00:00Z"
+}
+```
+
+## Security Considerations
+
+### Data Protection
+- Encrypt sensitive data at rest
+- Use HTTPS for all communications
+- Implement rate limiting
+- Validate and sanitize all inputs
+
+### Audit Logging
+- Log all API requests and responses
+- Record user actions and system events
+- Store logs securely with integrity protection
+- Implementation in [api/services/audit_service.go](mdc:api/services/audit_service.go)

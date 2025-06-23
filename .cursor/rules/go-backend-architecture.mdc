@@ -1,0 +1,76 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Go Backend Architecture Guidelines
+
+## Directory Structure
+
+The API backend follows a clean architecture pattern:
+
+```
+api/
+├── config/          # Configuration management
+├── controllers/     # HTTP request handlers
+├── database/        # Database connection and migrations
+├── middleware/      # HTTP middleware (auth, logging, etc.)
+├── models/          # Data models and structures
+├── routes/          # Route definitions and grouping
+├── services/        # Business logic layer
+└── utils/           # Utility functions and helpers
+```
+
+## Key Components
+
+### Controllers
+Located in [api/controllers/](mdc:api/controllers/):
+- [auth_controller.go](mdc:api/controllers/auth_controller.go) - Authentication endpoints
+- [file_controller.go](mdc:api/controllers/file_controller.go) - File management endpoints
+- [user_controller.go](mdc:api/controllers/user_controller.go) - User management endpoints
+- [audit_controller.go](mdc:api/controllers/audit_controller.go) - Audit log endpoints
+
+### Models
+Located in [api/models/](mdc:api/models/):
+- [user.go](mdc:api/models/user.go) - User data structure
+- [file.go](mdc:api/models/file.go) - File metadata structure
+- [audit.go](mdc:api/models/audit.go) - Audit log structure
+
+### Services
+Located in [api/services/](mdc:api/services/):
+- [auth_service.go](mdc:api/services/auth_service.go) - Authentication business logic
+- [file_service.go](mdc:api/services/file_service.go) - File operations business logic
+- [audit_service.go](mdc:api/services/audit_service.go) - Audit logging business logic
+
+### Utilities
+Located in [api/utils/](mdc:api/utils/):
+- [jwt.go](mdc:api/utils/jwt.go) - JWT token management
+- [crypto.go](mdc:api/utils/crypto.go) - Encryption/decryption utilities
+- [validator.go](mdc:api/utils/validator.go) - Input validation helpers
+
+## Code Standards
+
+### Naming Conventions
+- Use English for all code, comments, and documentation
+- Follow Go naming conventions (PascalCase for exported, camelCase for unexported)
+- Use descriptive variable and function names
+- Prefix interface names with 'I' when needed for clarity
+
+### Error Handling
+- Always handle errors explicitly
+- Use custom error types for business logic errors
+- Log errors appropriately based on severity
+- Return meaningful error messages to clients
+
+### Security Practices
+- Validate all input data
+- Use parameterized queries to prevent SQL injection
+- Implement proper authentication and authorization
+- Log security-relevant events for audit purposes
+- Never log sensitive information (passwords, tokens, etc.)
+
+### Testing
+- Write unit tests for all business logic
+- Use table-driven tests where appropriate
+- Mock external dependencies
+- Maintain high test coverage (>80%)

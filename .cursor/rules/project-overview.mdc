@@ -1,0 +1,38 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# ZephyrZero Project Overview
+
+ZephyrZero is a zero-trust file storage system built with Go and modern web technologies. The project follows clean architecture principles and implements comprehensive security measures.
+
+## Project Structure
+
+This is a monorepo containing:
+- **API Backend**: Located in [api/](mdc:api/) - Go-based REST API server
+- **Web Frontend**: Located in [web/](mdc:web/) - Web client interface (currently under development)
+
+## Main Entry Points
+
+- **API Server**: [api/main.go](mdc:api/main.go) - Main application entry point
+- **Configuration**: [api/config/config.go](mdc:api/config/config.go) - Application configuration management
+- **Database**: [api/database/database.go](mdc:api/database/database.go) - Database connection and initialization
+- **Routes**: [api/routes/routes.go](mdc:api/routes/routes.go) - API route definitions
+
+## Key Dependencies
+
+The project uses:
+- **Gin**: High-performance HTTP web framework
+- **GORM**: ORM library for database operations
+- **JWT**: JSON Web Token for authentication
+- **SQLite**: Default database (supports MySQL, PostgreSQL)
+- **Crypto**: Built-in Go crypto for file encryption
+
+## Security Architecture
+
+ZephyrZero implements zero-trust principles:
+- Every request requires authentication and authorization
+- Files are encrypted at rest using AES-256
+- Comprehensive audit logging for all operations
+- Strong session management with JWT tokens
